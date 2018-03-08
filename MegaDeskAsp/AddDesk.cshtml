@@ -2,12 +2,11 @@
     Layout = "~/_Layout.cshtml";
     Page.Title = "New Desk Quote - MegaDesk";
     var db = Database.Open("DeskDatabase");
-    var altTxt = "";
+    HtmlString altTxt = new HtmlString("");
 
     //Add Desk Quote to DB
     if (IsPost && !Request["name"].IsEmpty() && !Request["material"].IsEmpty() && !Request["drawers"].IsEmpty() && !Request["width"].IsEmpty() && !Request["depth"].IsEmpty() && !Request["rush"].IsEmpty())
     {
-
         //Set defaults
         var basePrice = 200.00;
         var costPerDrawer = 50.00;
@@ -45,128 +44,137 @@
         var drawerCost = 0.00;
         var rushCost = 0.00;
 
-        //Calculate surface area
-        var surfArea = Convert.ToDouble(Request["width"]) * Convert.ToDouble(Request["depth"]);
-
-        //Calculate added cost for excess surface area
-        if(surfArea > areaThreshold)
-        {
-            excAreaCost = (surfArea - areaThreshold) * excessSurfArea;
-        }
-
-        else
-        {
-            excAreaCost = 0.00;
-        }
-
-        //Calculate Drawer cost
-        if (Convert.ToInt32(Request["drawers"]) > 0)
-        {
-            drawerCost = costPerDrawer * Convert.ToInt32(Request["drawers"]);
-        }
-
-        else
-        {
-            drawerCost = 0.00;
-        }
-
-        //Calculate Material Cost
-        if(Request["material"] == "Laminate")
-        {
-            matPrice = priceLam;
-        }
-
-        else if(Request["material"] == "Veneer")
-        {
-            matPrice = priceVen;
-        }
-
-        else if (Request["material"] == "Oak")
-        {
-            matPrice = priceOak;
-        }
-
-        else if (Request["material"] == "Rosewood")
-        {
-            matPrice = priceRose;
-        }
-
-        else if (Request["material"] == "Pine")
-        {
-            matPrice = pricePine;
-        }
-
-        //Calculate rush cost
-        if(Convert.ToInt32(Request["rush"]) == 3)
-        {
-            if(surfArea < areaThreshold)
-            {
-                rushCost = rp1;
-            }
-
-            else if (surfArea <= rushThreshold)
-            {
-                rushCost = rp2;
-            }
-
-            else
-            {
-                rushCost = rp3;
-            }
-        }
-
-        else if (Convert.ToInt32(Request["rush"]) == 5)
-        {
-            if (surfArea < areaThreshold)
-            {
-                rushCost = rp4;
-            }
-
-            else if (surfArea <= rushThreshold)
-            {
-                rushCost = rp5;
-            }
-
-            else
-            {
-                rushCost = rp6;
-            }
-        }
-
-        else if (Convert.ToInt32(Request["rush"]) == 7)
-        {
-            if (surfArea < areaThreshold)
-            {
-                rushCost = rp7;
-            }
-
-            else if (surfArea <= rushThreshold)
-            {
-                rushCost = rp8;
-            }
-
-            else
-            {
-                rushCost = rp9;
-            }
-        }
-
-        //Calculate Quote
-        var quote = basePrice + excAreaCost + drawerCost + matPrice + rushCost;
-
-
         //Validate all the data
         Validation.RequireFields("name", "width", "depth", "rush");
-        Validation.Add("width", Validator.Range(minWidth, maxWidth, "Width must be between " + minWidth + " and " + maxWidth + ". Please try again."));
-        Validation.Add("depth", Validator.Range(minDepth, maxDepth, "Depth must be between " + minDepth + " and " + maxDepth + ". Please try again."));
+        Validation.Add("width", Validator.Range(minWidth, maxWidth, "Width must be between " + minWidth + " and " + maxWidth + ". Please correct the issue and try again."));
+        Validation.Add("depth", Validator.Range(minDepth, maxDepth, "Depth must be between " + minDepth + " and " + maxDepth + ". Please correct the issue and try again."));
+
+        if (Validation.IsValid())
+        {
+            //Calculate surface area
+            var surfArea = Convert.ToDouble(Request["width"]) * Convert.ToDouble(Request["depth"]);
+
+            //Calculate added cost for excess surface area
+            if (surfArea > areaThreshold)
+            {
+                excAreaCost = (surfArea - areaThreshold) * excessSurfArea;
+            }
+
+            else
+            {
+                excAreaCost = 0.00;
+            }
+
+            //Calculate Drawer cost
+            if (Convert.ToInt32(Request["drawers"]) > 0)
+            {
+                drawerCost = costPerDrawer * Convert.ToInt32(Request["drawers"]);
+            }
+
+            else
+            {
+                drawerCost = 0.00;
+            }
+
+            //Calculate Material Cost
+            if (Request["material"] == "Laminate")
+            {
+                matPrice = priceLam;
+            }
+
+            else if (Request["material"] == "Veneer")
+            {
+                matPrice = priceVen;
+            }
+
+            else if (Request["material"] == "Oak")
+            {
+                matPrice = priceOak;
+            }
+
+            else if (Request["material"] == "Rosewood")
+            {
+                matPrice = priceRose;
+            }
+
+            else if (Request["material"] == "Pine")
+            {
+                matPrice = pricePine;
+            }
+
+            //Calculate rush cost
+            if (Convert.ToInt32(Request["rush"]) == 3)
+            {
+                if (surfArea < areaThreshold)
+                {
+                    rushCost = rp1;
+                }
+
+                else if (surfArea <= rushThreshold)
+                {
+                    rushCost = rp2;
+                }
+
+                else
+                {
+                    rushCost = rp3;
+                }
+            }
+
+            else if (Convert.ToInt32(Request["rush"]) == 5)
+            {
+                if (surfArea < areaThreshold)
+                {
+                    rushCost = rp4;
+                }
+
+                else if (surfArea <= rushThreshold)
+                {
+                    rushCost = rp5;
+                }
+
+                else
+                {
+                    rushCost = rp6;
+                }
+            }
+
+            else if (Convert.ToInt32(Request["rush"]) == 7)
+            {
+                if (surfArea < areaThreshold)
+                {
+                    rushCost = rp7;
+                }
+
+                else if (surfArea <= rushThreshold)
+                {
+                    rushCost = rp8;
+                }
+
+                else
+                {
+                    rushCost = rp9;
+                }
+            }
+
+            //Calculate Quote
+            var quote = basePrice + excAreaCost + drawerCost + matPrice + rushCost;
 
 
-        var insertRecord = "INSERT INTO Desks (custName,material,drawers,width,depth,rushDays,quote,date) VALUES(@0, @1, @2, @3, @4, @5, @6,@7)";
-        db.Execute(insertRecord, Request["name"], Request["material"], Request["drawers"], Request["width"], Request["depth"], Request["rush"], quote, Request["date"]);
+            //Insert into DB
+            var insertRecord = "INSERT INTO Desks (custName,material,drawers,width,depth,rushDays,quote,date) VALUES(@0, @1, @2, @3, @4, @5, @6,@7)";
+            db.Execute(insertRecord, Request["name"], Request["material"], Request["drawers"], Request["width"], Request["depth"], Request["rush"], quote, Request["date"]);
 
-        //altTxt = "<div class='alert alert-success alert-dismissible' role='alert'><button type = 'button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>Your quote was added to the database.</div>'";
+            //altTxt = "<div class='alert alert-success alert-dismissible' role='alert'><button type = 'button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>Your quote was added to the database.</div>'";
 
-        Response.Redirect("~/MegaDesk");
+            Response.Redirect("~/MegaDesk");
+        }
+
+        else
+        {
+            altTxt = new HtmlString("<div class='alert alert-danger alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>" + Html.ValidationSummary( "", false, new { @class = "text-danger" }) + "</div>");
+        }
+
     }
 }
 <div class="container">
@@ -178,10 +186,10 @@
             <form action="~/AddDesk" method="post">
                 <div class="form-group">
                     <label class="control-label" for="name">Customer Name</label>
-                    <input type="text" class="form-control" id="name" name="name" placeholder="Enter Customer Name" required>
+                    <input type="text" class="form-control" id="name" name="name" value='@Request["name"]' placeholder="Enter Customer Name" required>
                     <br />
                     <label class="control-label" for="material">Surface Material</label>
-                    <select class="form-control" name="material" id="material">
+                    <select class="form-control" name="material" value='@Request["material"]' id="material">
                         <option value="Pine">Pine</option>
                         <option value="Laminate">Laminate</option>
                         <option value="Veneer">Veneer</option>
@@ -190,20 +198,20 @@
                     </select>
                     <br />
                     <label class="control-label" for="drawers">Number of Drawers</label>
-                    <select class="form-control" name="drawers" id="drawers">
+                    <select class="form-control" name="drawers" value='@Request["drawers"]' id="drawers">
                         <option value="0">0</option>
                         <option value="1">1</option>
-                        <option value="2">3</option>
+                        <option value="2">2</option>
                         <option value="3">3</option>
                         <option value="4">4</option>
                         <option value="5">5</option>
                     </select>
                     <br />
                     <label class="control-label" for="width">Desired Width</label>
-                    <input type="text" class="form-control" id="width" name="width" placeholder="Enter a value between 24-96" required>
+                    <input type="text" class="form-control" id="width" name="width" value='@Request["width"]' placeholder="Enter a value between 24-96" required>
                     <br />
                     <label class="control-label" for="width">Desired Depth</label>
-                    <input type="text" class="form-control" id="depth" name="depth" placeholder="Enter a value between 12-48" required>
+                    <input type="text" class="form-control" id="depth" name="depth" value='@Request["depth"]' placeholder="Enter a value between 12-48" required>
                     <br />
                     <label class="control-label" for="rush">Shipping Speed</label>
                     <br />
