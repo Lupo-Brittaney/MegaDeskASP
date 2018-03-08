@@ -1,5 +1,213 @@
 ﻿@{
     Layout = "~/_Layout.cshtml";
-    Page.Title = "Add Desk Quote - MegaDesk";
+    Page.Title = "New Desk Quote - MegaDesk";
     var db = Database.Open("DeskDatabase");
+    var altTxt = "";
+
+    //Add Desk Quote to DB
+    if (IsPost && !Request["name"].IsEmpty() && !Request["material"].IsEmpty() && !Request["drawers"].IsEmpty() && !Request["width"].IsEmpty() && !Request["depth"].IsEmpty() && !Request["rush"].IsEmpty())
+    {
+
+        //Set defaults
+        var basePrice = 200.00;
+        var costPerDrawer = 50.00;
+        var areaThreshold = 1000.00;
+        var excessSurfArea = 1.0;
+        var rushThreshold = 2000.00;
+        var matPrice = 0.00;
+
+        //Set Constants
+        var minWidth = 24.00;
+        var maxWidth = 96.00;
+        var minDepth = 12.00;
+        var maxDepth = 48.00;
+
+        //Set material prices
+        var priceLam = 100;
+        var priceOak = 200;
+        var priceRose = 300;
+        var priceVen = 125;
+        var pricePine = 50;
+
+        //Set rush prices
+        var rp1 = 60;
+        var rp2 = 70;
+        var rp3 = 80;
+        var rp4 = 40;
+        var rp5 = 50;
+        var rp6 = 60;
+        var rp7 = 30;
+        var rp8 = 35;
+        var rp9 = 40;
+
+        //Intitialize costs
+        var excAreaCost = 0.00;
+        var drawerCost = 0.00;
+        var rushCost = 0.00;
+
+        //Calculate surface area
+        var surfArea = Convert.ToDouble(Request["width"]) * Convert.ToDouble(Request["depth"]);
+
+        //Calculate added cost for excess surface area
+        if(surfArea > areaThreshold)
+        {
+            excAreaCost = (surfArea - areaThreshold) * excessSurfArea;
+        }
+
+        else
+        {
+            excAreaCost = 0.00;
+        }
+
+        //Calculate Drawer cost
+        if (Convert.ToInt32(Request["drawers"]) > 0)
+        {
+            drawerCost = costPerDrawer * Convert.ToInt32(Request["drawers"]);
+        }
+
+        else
+        {
+            drawerCost = 0.00;
+        }
+
+        //Calculate Material Cost
+        if(Request["material"] == "Laminate")
+        {
+            matPrice = priceLam;
+        }
+
+        else if(Request["material"] == "Veneer")
+        {
+            matPrice = priceVen;
+        }
+
+        else if (Request["material"] == "Oak")
+        {
+            matPrice = priceOak;
+        }
+
+        else if (Request["material"] == "Rosewood")
+        {
+            matPrice = priceRose;
+        }
+
+        else if (Request["material"] == "Pine")
+        {
+            matPrice = pricePine;
+        }
+
+        //Calculate rush cost
+        if(Convert.ToInt32(Request["rush"]) == 3)
+        {
+            if(surfArea < areaThreshold)
+            {
+                rushCost = rp1;
+            }
+
+            else if (surfArea <= rushThreshold)
+            {
+                rushCost = rp2;
+            }
+
+            else
+            {
+                rushCost = rp3;
+            }
+        }
+
+        else if (Convert.ToInt32(Request["rush"]) == 5)
+        {
+            if (surfArea < areaThreshold)
+            {
+                rushCost = rp4;
+            }
+
+            else if (surfArea <= rushThreshold)
+            {
+                rushCost = rp5;
+            }
+
+            else
+            {
+                rushCost = rp6;
+            }
+        }
+
+        else if (Convert.ToInt32(Request["rush"]) == 7)
+        {
+            if (surfArea < areaThreshold)
+            {
+                rushCost = rp7;
+            }
+
+            else if (surfArea <= rushThreshold)
+            {
+                rushCost = rp8;
+            }
+
+            else
+            {
+                rushCost = rp9;
+            }
+        }
+
+        //Calculate Quote
+        var quote = basePrice + excAreaCost + drawerCost + matPrice + rushCost;
+
+        var insertRecord = "INSERT INTO Desks (custName,material,drawers,width,depth,rushDays,quote,date) VALUES(@0, @1, @2, @3, @4, @5, @6,@7)";
+        db.Execute(insertRecord, Request["name"], Request["material"], Request["drawers"], Request["width"], Request["depth"], Request["rush"], quote, Request["date"]);
+
+        altTxt = "<div class='alert alert-success alert-dismissible' role='alert'><button type = 'button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>Your quote was added to the database.</div>'";
+
+        Response.Redirect("~/MegaDesk");
+    }
 }
+<div class="container">
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8">
+            @altTxt
+            <h2>New Desk Quote</h2>
+            <form action="~/AddDesk" method="post">
+                <div class="form-group">
+                    <label class="control-label" for="name">Customer Name</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Enter Customer Name" required>
+                    <br />
+                    <label class="control-label" for="material">Surface Material</label>
+                    <select class="form-control" name="material" id="material">
+                        <option value="Pine">Pine</option>
+                        <option value="Laminate">Laminate</option>
+                        <option value="Veneer">Veneer</option>
+                        <option value="Oak">Oak</option>
+                        <option value="Rosewood">Rosewood</option>
+                    </select>
+                    <br />
+                    <label class="control-label" for="drawers">Number of Drawers</label>
+                    <select class="form-control" name="drawers" id="drawers">
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">3</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                    <br />
+                    <label class="control-label" for="width">Desired Width</label>
+                    <input type="text" class="form-control" id="width" name="width" placeholder="Enter a value between 24-96" required>
+                    <br />
+                    <label class="control-label" for="width">Desired Depth</label>
+                    <input type="text" class="form-control" id="depth" name="depth" placeholder="Enter a value between 12-48" required>
+                    <br />
+                    <label class="control-label" for="rush">Shipping Speed</label>
+                    <br />
+                    <label class="radio-inline"><input type="radio" value="3" name="rush">3 days</label>
+                    <label class="radio-inline"><input type="radio" value="5" name="rush">5 days</label>
+                    <label class="radio-inline"><input type="radio" value="7" name="rush">7 days</label>
+                </div>
+                <input type="hidden" name="date" value="@DateTime.Now" />
+                <button type="submit" class="btn btn-default">Submit</button>
+            </form>
+        </div>
+        <div class="col-sm-2"></div>
+    </div>
+</div>
