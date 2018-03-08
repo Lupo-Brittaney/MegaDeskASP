@@ -154,10 +154,17 @@
         //Calculate Quote
         var quote = basePrice + excAreaCost + drawerCost + matPrice + rushCost;
 
+
+        //Validate all the data
+        Validation.RequireFields("name", "width", "depth", "rush");
+        Validation.Add("width", Validator.Range(minWidth, maxWidth, "Width must be between " + minWidth + " and " + maxWidth + ". Please try again."));
+        Validation.Add("depth", Validator.Range(minDepth, maxDepth, "Depth must be between " + minDepth + " and " + maxDepth + ". Please try again."));
+
+
         var insertRecord = "INSERT INTO Desks (custName,material,drawers,width,depth,rushDays,quote,date) VALUES(@0, @1, @2, @3, @4, @5, @6,@7)";
         db.Execute(insertRecord, Request["name"], Request["material"], Request["drawers"], Request["width"], Request["depth"], Request["rush"], quote, Request["date"]);
 
-        altTxt = "<div class='alert alert-success alert-dismissible' role='alert'><button type = 'button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>Your quote was added to the database.</div>'";
+        //altTxt = "<div class='alert alert-success alert-dismissible' role='alert'><button type = 'button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>Your quote was added to the database.</div>'";
 
         Response.Redirect("~/MegaDesk");
     }
