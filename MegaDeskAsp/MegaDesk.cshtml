@@ -1,6 +1,35 @@
 ﻿@{
     Layout = "~/_Layout.cshtml";
     PageData["Title"] = "View All Quotes - MegaDesk";
-    var db = Database.Open("MegaDesk");
+    var db = Database.Open("DeskDatabase");
 }
 
+<div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
+
+        <div style="text-align:center;">
+            <form class="form-inline" style="display:inline-block;" action="Index" method="get">
+                <input type="text" class="form-control mr-sm-2" name="book" value="@Request.QueryString["name"]" placeholder="Search by Customer Name">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        </div>
+        <h2>MegaDesk Quotes</h2>
+        @grid.GetHtml(tableStyle: "grid",
+                                    headerStyle: "head",
+                                    alternatingRowStyle: "alt",
+                                    columns: grid.Columns(
+                                        grid.Column(format: @<a href="EditDesk?id=@item.id"><span class="glyphicon glyphicon-pencil"></span></a>, header: "Customer Name", canSort: true),
+                             grid.Column("book", header: "Book"),
+                             grid.Column("chapter", header: "Chapter", canSort: false),
+                             grid.Column("verse", header: "Verse", canSort: false),
+                             grid.Column(columnName: "note", header: "Note", canSort: false),
+                             grid.Column("date_added", header: "Date added"),
+                             grid.Column(format:
+                        @<a href="DeleteDesk?id=@item.id"><span class="glyphicon glyphicon-trash"></span></a>, header: "Delete", canSort: false)
+                  )
+                  )
+    </div>
+    <div class="col-sm-2"></div>
+</div>
+                            </div>
