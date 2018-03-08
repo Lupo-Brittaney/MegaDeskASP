@@ -12,12 +12,12 @@
 }
 
 <div class="row">
-    <div class="col-sm-2"></div>
-    <div class="col-sm-8">
+    <div class="col-sm-1"></div>
+    <div class="col-sm-10">
 
-        <div style="text-align:center;">
+        <div class="text-center">
             <form class="form-inline" style="display:inline-block;" action="MegaDesk" method="get">
-                <input type="text" class="form-control mr-sm-2" name="custName" value="@Request.QueryString["custName"]" placeholder="Search by Customer Name">
+                <input type="text" class="form-control mr-sm-2" name="custName" value="@Request.QueryString["custName"]" placeholder="Search by Customer">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
         </div>
@@ -29,18 +29,17 @@
                                      grid.Column(format: @<a href="EditDesk?id=@item.id"><span class="glyphicon glyphicon-pencil"></span></a>, header: "Edit", canSort: false),
                           grid.Column("custName", header: "Customer Name"),
                           grid.Column("date", header: "Date Quoted"),
-                          grid.Column("width", header: "Width", canSort: false),
-                          grid.Column(columnName: "depth", header: "Depth", canSort: false),
+                          grid.Column("Width", format:(item) => item.width + " inches",canSort: false),
+                          grid.Column("Depth", format: (item) => item.depth + " inches", canSort: false),
                           grid.Column(columnName: "drawers", header: "Drawers", canSort: false),
                           grid.Column("material", header: "Material", canSort: false),
                           grid.Column("Ship Speed", format: (item) => item.rushDays + " days", canSort: false),
-        //grid.Column("rushDays", header: "Ship Speed", canSort: false),
-        grid.Column("Quote", format: (item) => "$" + item.quote, canSort: false),
+                          grid.Column("Quote", format: (item) => "$" + item.quote, canSort: false),
                              grid.Column(format:
                         @<a href="DeleteDesk?id=@item.id"><span class="glyphicon glyphicon-trash"></span></a>, header: "Delete", canSort: false)
                   )
                   )
     </div>
-    <div class="col-sm-2"></div>
+    <div class="col-sm-1"></div>
 </div>
                           
