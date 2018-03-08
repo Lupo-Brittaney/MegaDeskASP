@@ -2,6 +2,13 @@
     Layout = "~/_Layout.cshtml";
     PageData["Title"] = "View All Quotes - MegaDesk";
     var db = Database.Open("DeskDatabase");
+
+    //Get all the scriptures
+    var selectCmd = "SELECT * FROM Desks WHERE custName LIKE @0";
+    var searchTerm = "%" + Request["custName"] + "%";
+
+    var selectedData = db.Query(selectCmd, searchTerm);
+    var grid = new WebGrid(source: selectedData, rowsPerPage: 5, defaultSort: "custName");
 }
 
 <div class="row">
@@ -9,22 +16,26 @@
     <div class="col-sm-8">
 
         <div style="text-align:center;">
-            <form class="form-inline" style="display:inline-block;" action="Index" method="get">
-                <input type="text" class="form-control mr-sm-2" name="book" value="@Request.QueryString["name"]" placeholder="Search by Customer Name">
+            <form class="form-inline" style="display:inline-block;" action="MegaDesk" method="get">
+                <input type="text" class="form-control mr-sm-2" name="custName" value="@Request.QueryString["custName"]" placeholder="Search by Customer Name">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
         </div>
         <h2>MegaDesk Quotes</h2>
         @grid.GetHtml(tableStyle: "grid",
-                                    headerStyle: "head",
-                                    alternatingRowStyle: "alt",
-                                    columns: grid.Columns(
-                                        grid.Column(format: @<a href="EditDesk?id=@item.id"><span class="glyphicon glyphicon-pencil"></span></a>, header: "Customer Name", canSort: true),
-                             grid.Column("book", header: "Book"),
-                             grid.Column("chapter", header: "Chapter", canSort: false),
-                             grid.Column("verse", header: "Verse", canSort: false),
-                             grid.Column(columnName: "note", header: "Note", canSort: false),
-                             grid.Column("date_added", header: "Date added"),
+                                 headerStyle: "head",
+                                 alternatingRowStyle: "alt",
+                                 columns: grid.Columns(
+                                     grid.Column(format: @<a href="EditDesk?id=@item.id"><span class="glyphicon glyphicon-pencil"></span></a>, header: "Edit", canSort: false),
+                          grid.Column("custName", header: "Customer Name"),
+                          grid.Column("date", header: "Date Quoted"),
+                          grid.Column("width", header: "Width", canSort: false),
+                          grid.Column(columnName: "depth", header: "Depth", canSort: false),
+                          grid.Column(columnName: "drawers", header: "Drawers", canSort: false),
+                          grid.Column("material", header: "Material", canSort: false),
+                          grid.Column("Ship Speed", format: (item) => item.rushDays + " days", canSort: false),
+        //grid.Column("rushDays", header: "Ship Speed", canSort: false),
+        grid.Column("Quote", format: (item) => "$" + item.quote, canSort: false),
                              grid.Column(format:
                         @<a href="DeleteDesk?id=@item.id"><span class="glyphicon glyphicon-trash"></span></a>, header: "Delete", canSort: false)
                   )
