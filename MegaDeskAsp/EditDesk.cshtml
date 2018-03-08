@@ -1,5 +1,145 @@
 ﻿@{
     Layout = "~/_Layout.cshtml";
-    Page.Title = "MegaDesk";
+    Page.Title = "MegaDesk | Edite Quote";
 
+    var custName = "";
+    var date = "";
+    var width = "";
+    var depth = "";
+    var material = "";
+    var rushDays = "";
+    var drawers = "";
+    var quote = "";
+    var deskId = "";
+
+    if (!IsPost)
+    {
+        if (!Request.QueryString["ID"].IsEmpty() && Request.QueryString["ID"].IsInt())
+        {
+            deskId = Request.QueryString["ID"];
+            var db = Database.Open("DeskDatabase");
+            var dbCommand = "SELECT * FROM Desks WHERE ID = @0";
+            var row = db.QuerySingle(dbCommand, deskId);
+
+            if (row != null)
+            {
+                custName = row.custName;
+                width = row.width.ToString();
+                depth = row.depth.ToString();
+                material = row.material;
+                drawers = row.drawers.ToString();
+                rushDays = row.rushDays.ToString();
+                quote = row.quote.ToString();
+                date = row.Date.ToString();
+            }
+            else
+            {
+                Validation.AddFormError("No desk was selected.");
+            }
+        }
+        else
+        {
+            Validation.AddFormError("No desk was selected.");
+        }
+    }
+
+    if (IsPost)
+    {
+        Validation.RequireField("custName", "Customer name cannot be blank");
+        Validation.RequireField("width", "Width cannot be blank");
+        Validation.RequireField("depth", "Depth cannot be blank");
+        Validation.RequireField("drawers", "Drawers cannot be blank");
+        Validation.RequireField("material", "Material cannot be blank");
+        Validation.RequireField("rushDays", "Rush days cannot be blank");
+        Validation.RequireField("quote", "Quote cannot be blank");
+        Validation.RequireField("deskId", "No desk ID was submitted!");
+
+        custName = Request.Form["custName"];
+        width = Request.Form["width"];
+        depth = Request.Form["depth"];
+        drawers = Request.Form["drawers"];
+        material = Request.Form["material"];
+        rushDays = Request.Form["rushDays"];
+        quote = Request.Form["quote"];
+        deskId = Request.Form["deskID"];
+
+        if (Validation.IsValid())
+        {
+            var db = Database.Open("DeskDatabase");
+            var updateCommand = "UPDATE Desks SET custName=@0, width=@1, depth=@2, drawers=@3, material=@4, rushDays=@5, quote=@6 WHERE Id=@7";
+            db.Execute(updateCommand, custName, width, depth, drawers, material, rushDays, quote, deskId);
+            Response.Redirect("~/MegaDesk");
+        }
+    }
 }
+
+<h2>Edit a Desk Quote</h2>
+@Html.ValidationSummary()
+<form method="post">
+    <fieldset>
+        <legend>Desk Information</legend>
+
+        <p>
+            <label for="custName">Customer Name:</label>
+            <input type="text" id="custName" name="custName" value="@custName" required readonly />
+        </p>
+
+        <p>
+            <label for="width">Width(in):</label>
+            <input type="text" id="width" name="width" value="@width" required />
+        </p>
+
+        <p>
+            <label for="depth">Depth(in):</label>
+            <input type="text" id="depth" name="depth" value="@depth" required />
+        </p>
+
+        <p>
+            <label for="drawers">Darwers:</label>
+            <!--<input type="text" id="drawers" name="drawers" value="@drawers" /> -->
+            <select name="drawers" id="drawers" required>
+                <option value="@drawers">@drawers</option>
+                <option value=0>0</option>
+                <option value=1>1</option>
+                <option value=2>2</option>
+                <option value=3>3</option>
+                <option value=4>4</option>
+                <option value=5>5</option>
+                <option value=6>6</option>
+                <option value=7>7</option>
+            </select>
+
+        </p>
+        <p>
+            <label for="material">Material:</label>
+            <!--  <input type="text" id="material" name="material" value="@material" /> -->
+            <select name="material" id="material" required>
+                <option value="@material">@material</option>
+                <option value="Oak">Oak</option>
+                <option value="Laminate">Laminate</option>
+                <option value="Pine">Pine</option>
+                <option value="Rosewood">Rosewood</option>
+                <option value="Veneer">Veneer</option>
+            </select>
+        </p>
+        <p>
+            <label for="rushDays">Rush Days:</label>
+            <!-- <input type="text" id="rushDays" name="rushDays" value="@rushDays" /> -->
+            <select name="rushDays" id="rushDays" required>
+                <option value="@rushDays">@rushDays</option>
+                <option value=0>0</option>
+                <option value=3>3</option>
+                <option value=5>5</option>
+                <option value=7>7</option>
+            </select>
+        </p>
+        <p>
+            <label for="quote">Quote: $</label>
+            <input type="text" id="quote" name="quote" value="@quote" required />
+        </p>
+        <input type="hidden" name="deskId" value="@deskId" />
+
+        <p><input type="submit" name="buttonSubmit" value="Submit Changes" /></p>
+    </fieldset>
+</form>
+<p><a href="~/MegaDesk">Return to view all quotes</a>
