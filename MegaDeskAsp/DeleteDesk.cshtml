@@ -53,53 +53,61 @@
     }
 
 }
+<div class="container">
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8">
+            <h2>Delete a Scripture Entry</h2>
+            @Html.ValidationSummary()
+            <form method="post">
+                <fieldset>
+                    <legend>Desk Information</legend>
 
-<h2>Delete a Scripture Entry</h2>
-@Html.ValidationSummary()
-<p><a href="~/MegaDesk">Return to view all quotes</a></p>
+                    <p>
+                        <label class="control-label" for="custName">Customer Name</label>
+                        <input class="form-control" type="text" id="custName" name="custName" value="@custName" readonly />
+                    </p>
 
-<form method="post">
-    <fieldset>
-        <legend>Desk Information</legend>
+                    <p>
+                        <label class="control-label" for="material">Material</label>
+                        <input class="form-control" type="text" id="material" name="material" value="@material" readonly />
+                    </p>
 
-        <p>
-            <span>Customer Name:</span>
-            <span>@custName</span>
-        </p>
+                    <p>
+                        <label class="control-label" for="drawers">Number of Drawers</label>
+                        <input class="form-control" type="text" id="drawers" name="drawers" value="@drawers" readonly />
+                    </p>
 
-        <p>
-            <span>Width:</span>
-            <span>@width in</span>
-        </p>
+                    <p>
+                        <label class="control-label" for="width">Width (in)</label>
+                        <input class="form-control" type="text" id="width" name="width" value="@width" readonly />
+                    </p>
 
-        <p>
-            <span>Depth:</span>
-            <span>@depth in</span>
-        </p>
+                    <p>
+                        <label class="control-label" for="depth">Depth (in)</label>
+                        <input class="form-control" type="text" id="depth" name="depth" value="@depth" readonly />
+                    </p>
 
-        <p>
-            <span>Material:</span>
-            <span>@material</span>
-        </p>
-        <p>
-            <span>Drawers:</span>
-            <span>@drawers</span>
-        </p>
-        <p>
-            <span>Rush Days:</span>
-            <span>@rushDays days</span>
-        </p>
+                    <p>
+                        <label class="control-label" for="rushDays">Shipping Speed</label>
+                        <input class="form-control" type="text" id="rushDays" name="rushDays" value="@rushDays" readonly />
+                    </p>
 
-        <p>
-            <span>Date Quoted:</span>
-            <span>@date</span>
-        </p>
-        <p>
-            <span>Quote total:</span>
-            <span>$@quote</span>
-        </p>
+                    <p>
+                        <label class="control-label" for="date">Date Quoted</label>
+                        <input class="form-control" type="text" id="date" name="date" value="@date" readonly />
+                    </p>
 
-        <input type="hidden" name="deskId" value="@deskId" />
-        <p><input type="submit" name="buttonDelete" value="Delete Desk Quote" /></p>
-    </fieldset>
-</form>
+                    <p>
+                        <label class="control-label" for="quote">Quote Total</label>
+                        <input class="form-control" type="text" id="quote" name="quote" value="@quote" readonly />
+                    </p>
+
+                    <input type="hidden" name="deskId" value="@deskId" />
+                    <p><input type="submit" name="buttonDelete" class="btn btn-default" value="Delete Desk Quote" /></p>
+                </fieldset>
+            </form>
+            <p><a href="~/MegaDesk">Return to view all quotes</a></p>
+        </div>
+    </div>
+</div>
