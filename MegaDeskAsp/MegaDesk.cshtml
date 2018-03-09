@@ -3,7 +3,7 @@
     PageData["Title"] = "MegaDesk | View All Quotes";
     var db = Database.Open("DeskDatabase");
 
-    //Get all the scriptures
+    //Get all the quotes
     var selectCmd = "SELECT * FROM Desks WHERE custName LIKE @0";
     var searchTerm = "%" + Request["custName"] + "%";
 
