@@ -1,6 +1,6 @@
 ﻿@{
     Layout = "~/_Layout.cshtml";
-    Page.Title = "MegaDesk | Edite Quote";
+    Page.Title = "MegaDesk | Edit Quote";
 
     //Set variables
     var custName = "";
@@ -21,7 +21,7 @@
 
     //create array of materials, rushDays and drawers
     string[] materials = { "Oak", "Pine", "Rosewood", "Veneer" };
-    string[] days = { "14", "3", "5", "7"};
+    string[] days = { "3", "5", "7", "14" };
     string[] numDrawers = { "0", "1", "2", "3", "4", "5", "6", "7"};
 
 
@@ -315,11 +315,11 @@
                                     {
                                         if (option == @rushDays)
                                         {
-                                            <option value="@option" selected>@option</option>
+                                            <option value="@option" selected>@option days</option>
                                         }
                                         else
                                         {
-                                            <option value="@option">@option</option>
+                                            <option value="@option">@option days</option>
                                         }
                                         }
                                 </select>
