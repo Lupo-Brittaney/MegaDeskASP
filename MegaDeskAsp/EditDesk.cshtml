@@ -19,6 +19,12 @@
     var minDepth = 12.00;
     var maxDepth = 48.00;
 
+    //create array of materials, rushDays and drawers
+    string[] materials = { "Oak", "Pine", "Rosewood", "Veneer" };
+    string[] days = { "14", "3", "5", "7"};
+    string[] numDrawers = { "0", "1", "2", "3", "4", "5", "6", "7"};
+
+
     //load information for page
     if (!IsPost)
     {
@@ -258,61 +264,74 @@
                             <label class="control-label" for="material">Surface Material:</label>
                             <!--  <input type="text" id="material" name="material" value="@material" /> -->
                             <select class="form-control" name="material" id="material">
-                                <option value="@material">@material</option>
-                                <option value="Oak">Oak</option>
-                                <option value="Laminate">Laminate</option>
-                                <option value="Pine">Pine</option>
-                                <option value="Rosewood">Rosewood</option>
-                                <option value="Veneer">Veneer</option>
+                                @foreach (var option in materials)
+                                {
+                                    if (option == @material)
+                                    {
+                                    <option value="@option" selected>@option</option>
+                                    }
+                                    else
+                                    {
+                                    <option value="@option" >@option</option>
+                                    }
+                                }
                             </select>
-                        </p>
+                         </p>
 
-                        <p>
-                            <label class="control-label" for="drawers">Number of Drawers:</label>
-                            <!--<input type="text" id="drawers" name="drawers" value="@drawers" /> -->
-                            <select class="form-control" name="drawers" id="drawers">
-                                <option value="@drawers">@drawers</option>
-                                <option value=0>0</option>
-                                <option value=1>1</option>
-                                <option value=2>2</option>
-                                <option value=3>3</option>
-                                <option value=4>4</option>
-                                <option value=5>5</option>
-                                <option value=6>6</option>
-                                <option value=7>7</option>
-                            </select>
+                          <p>
+                                <label class="control-label" for="drawers">Number of Drawers:</label>
+                                <!--<input type="text" id="drawers" name="drawers" value="@drawers" /> -->
+                                <select class="form-control" name="drawers" id="drawers">
+                                    @foreach (var option in numDrawers)
+                                     {
+                                        if (option == @drawers)
+                                        {
+                                            <option value="@option" selected>@option</option>
+                                        }
+                                        else
+                                        {
+                                           <option value="@option">@option</option>
+                                        }
+                                        }
+                                </select>
 
-                        </p>
+                            </p>
 
-                        <p>
-                            <label class="control-label" for="width">Width(in):</label>
-                            <input class="form-control" type="text" id="width" name="width" value="@width" />
-                        </p>
+                            <p>
+                                <label class="control-label" for="width">Width(in):</label>
+                                <input class="form-control" type="text" id="width" name="width" value="@width" />
+                            </p>
 
-                        <p>
-                            <label class="control-label" for="depth">Depth(in):</label>
-                            <input class="form-control" type="text" id="depth" name="depth" value="@depth" />
-                        </p>
+                            <p>
+                                <label class="control-label" for="depth">Depth(in):</label>
+                                <input class="form-control" type="text" id="depth" name="depth" value="@depth" />
+                            </p>
 
-                        <p>
-                            <label class="control-label" for="rushDays">Shipping Speed:</label>
-                            <!-- <input type="text" id="rushDays" name="rushDays" value="@rushDays" /> -->
-                            <select class="form-control" name="rushDays" id="rushDays">
-                                <option value="@rushDays">@rushDays</option>
-                                <option value=14>14- Standard shipping</option>
-                                <option value=3>3</option>
-                                <option value=5>5</option>
-                                <option value=7>7</option>
-                            </select>
-                        </p>
-                        <p>
-                            <label class="control-label" for="quote">Quote: $</label>
-                            <input class="form-control" type="text" id="quote" name="quote" value="@quote" readonly />
-                        </p>
-                        <p>**Quote will update upon submission**</p>
-                        <input type="hidden" name="deskId" value="@deskId" />
-                        <p><input type="submit" name="buttonSubmit" class="btn btn-default" value="Submit Changes" /></p>
-                    </fieldset>
+                            <p>
+                                <label class="control-label" for="rushDays">Shipping Speed:</label>
+                                <!-- <input type="text" id="rushDays" name="rushDays" value="@rushDays" /> -->
+                                <select class="form-control" name="rushDays" id="rushDays">
+                                    @foreach (var option in days)
+                                    {
+                                        if (option == @rushDays)
+                                        {
+                                            <option value="@option" selected>@option</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@option">@option</option>
+                                        }
+                                        }
+                                </select>
+                            </p>
+                            <p>
+                                <label class="control-label" for="quote">Quote: $</label>
+                                <input class="form-control" type="text" id="quote" name="quote" value="@quote" readonly />
+                            </p>
+                            <p>**Quote will update upon submission**</p>
+                            <input type="hidden" name="deskId" value="@deskId" />
+                            <p><input type="submit" name="buttonSubmit" class="btn btn-default" value="Submit Changes" /></p>
+                        </fieldset>
                 </div>
             </form>
             <p><a href="~/MegaDesk">Return to view all quotes</a>
